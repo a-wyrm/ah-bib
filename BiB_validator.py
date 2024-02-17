@@ -1,13 +1,22 @@
 from pybtex.database import BibliographyData, parse_file
 from collections import OrderedDict
-import sys
-
 
 def remove_abstracts(bib):
+  """Remove abstracts from bib."""
   bib_data = parse_file(bib)
   for entry in bib_data.entries.values():
       try:
           del entry.fields['abstract']
+      except KeyError:
+          print()
+  BibliographyData.to_file(bib_data, bib)
+
+def remove_file(bib):
+  """Remove file paths from bib."""
+  bib_data = parse_file(bib)
+  for entry in bib_data.entries.values():
+      try:
+          del entry.fields['file']
       except KeyError:
           print()
   BibliographyData.to_file(bib_data, bib)
@@ -26,6 +35,7 @@ def readfile(filename):
 
 
 def get_bibitems(bib):
+    """Where does a bibentry start, where does it end?"""
     result = OrderedDict()
     item = []
     entry_name = ''
@@ -48,35 +58,21 @@ def convert_to_bibentries(maxbib_items):
     return entries
 
 def enforce_order(name, entry, order):
+  """Parse the bib item to something meaningful, aka identify title, author, year etc."""
   for k, v in enumerate(entry):
     if v != order[k]:
         print(name)
         print("Wrong order", v, "!=",order[k])
         print(entry)
-        #sys.exit(1)
         print()
 
 
 
 def main():
     # change file name for different file
-    file = "./BIB Files/Password Policies.bib"
+    file = "./BIB Files/Accessible Security and Privacy/Visual Impairment/Visual Impairment.bib"
     remove_abstracts(file)
-
-    bib = readfile(file)
-    bib_items = get_bibitems(bib)
-    bib_entries = convert_to_bibentries(bib_items)
-    for entry in bib_items:
-        order = []
-        if entry.startswith("@inproceedings"):
-            order = ['author', 'title', 'booktitle', 'year', 'series', 'pages', 'address', 'month', 'publisher']
-        elif entry.startswith("article"):
-            order = ['author', 'title', 'journal', 'year', 'volume', 'number', 'pages', 'month', 'publisher']
-        else:
-            order = ['author', 'title', 'note', 'month', 'year']
-        
-        enforce_order(entry, bib_entries[entry], order)
-
+    remove_file(file)
             
             
 
