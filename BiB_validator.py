@@ -27,7 +27,7 @@ def remove_file(bib):
 
 def main():
     # change file name for different file
-    file = "./BIB Files/Misc. Accessibility Papers/Misc. Accessibility Papers.bib.bib"
+    file = "./Exported Items/Exported Items.bib"
     remove_abstracts(file)
     remove_file(file)
 
